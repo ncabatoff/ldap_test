@@ -1,6 +1,7 @@
 #!/bin/bash
 
-docker run --name openldap -d -p 389:389 osixia/openldap:1.2.1
+docker kill openldap 2>/dev/null
+docker run --rm --name openldap -d -p 389:389 osixia/openldap:1.2.2
 if [ $? -ne 0 ]; then
     echo "Error on running the OpenLDAP Docker image."
     exit 1
@@ -15,6 +16,3 @@ done
 ansible-playbook test.yml -e "ansible_python_interpreter=$(which python3)"
 
 ./validate.sh
-status=$?
-docker stop openldap && docker rm openldap
-exit $status
